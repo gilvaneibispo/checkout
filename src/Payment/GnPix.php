@@ -26,8 +26,8 @@ class GnPix implements PaymentInterface
     public static function getInitialData(): array
     {
         return array(
-            "client_id" => "Client_Id_55730937ab7b3c9bef234074e91adcc64953bca0",
-            "client_secret" => "Client_Secret_565b238d2af25ff5eb852c06d4c87dfb3873d921",
+            "client_id" => "*******",
+            "client_secret" => "********",
             "certificate" => realpath(dirname(__DIR__, 2) . '/var/cert/exdev_pro.pem'),//realpath(__DIR__ . "/productionCertificate.p12"), // Absolute path to the certificate in .pem or .p12 format
             "sandbox" => false,
             "debug" => false,
