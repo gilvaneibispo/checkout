@@ -3,9 +3,16 @@
 class Payment
 {
 
-    public function paymentHandler(PaymentInterface $pay):array
+    private PaymentInterface $payment;
+
+    public function __construct(PaymentInterface $payment)
+    {
+        $this->payment = $payment;
+    }
+
+    public function paymentHandler():array
     {
 
-        return $pay->pay();
+        return $this->payment->pay();
     }
 }

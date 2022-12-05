@@ -1,28 +1,49 @@
 $(function () {
 
-    const BASE_URL = "http://127.0.0.1:8000/"
-    let amount = 25.90;
-    let brandCard = null;
-    let maxInst = 12;
-    let numberInst = 1;
-    let cardEncrypt;
-    let publicKey;
-    let lockAction = false;
-    let productKey = "MEUPRODUTO01";
 
-    $('#nav-tab a').on('click', function (e) {
-        e.preventDefault()
-        $(this).tab('show')
+    general.REQUEST_API().then((resp) => {
+        console.log("RESPOSTA: ", resp);
+        initPayment(resp);
     });
 
+    function initPayment(resp){
 
-    //$.get(`./pix-static.php?item_id=${productKey}&amount=${amountCar}`, function (resp){
-    $.get(`${BASE_URL}`, function (resp) {
-        let qrcode = JSON.parse(resp);
-        $("#qrcode").attr('src', qrcode.qrcode);
-        $("#textCode").text(qrcode.text_code)
-        //console.log(resp);
-    });
+        bootStrapTabConfig();
+        loadStaticPix(resp.order_ref);
+        loadDynamicPix(resp.order_ref);
+
+        $('.loading').css({
+            display: 'none'
+        });
+    }
+
+
+    function bootStrapTabConfig() {
+        $('#nav-tab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+    }
+
+
+    function loadStaticPix(orderRef) {
+
+        $.get(`${general.BASE_URL}/pix/static/${orderRef}`, function (resp) {
+
+            $("#qrcode").attr('src', resp.location);
+            $("#textCode").text(resp.payload);
+        });
+    }
+
+    function loadDynamicPix(orderRef) {
+
+        console.log(general.ORDER_DATA);
+        $.get(`${general.BASE_URL}/pix/dynamic/${orderRef}`, function (resp) {
+
+            $("#qrcodeDyn").attr('src', resp.location);
+            $("#textCodeDyn").text(resp.payload);
+        });
+    }
 
 
     /*
