@@ -1,11 +1,12 @@
 <?php
 
 /*
- * Esta classe constroi o payload de um pix estático, que pode ser usado na função capia
- * e cola dos APPs de bancos, seguindo a documentação do PIX do Banco Central.
- * O payload do Pix é uma string longa com varios conjuntos de dados concatenados
- * Cada conjunto de dados é composto por sua ID, tamanho e valor, seguindo especificação
- * do Banco Central. Ex.: O conjunto 'Payload Format Indicator' possui ID = '00',
+ * Esta classe constroi o payload de um pix estático, que pode ser usado na função
+ * capia e cola dos APPs de bancos, seguindo a documentação do PIX do Banco Central.
+ * O payload do Pix é uma string longa com varios conjuntos de dados concatenados,
+ * onde cada conjunto é composto por ID, tamanho e valor (ID e tamanho conterá sempre
+ * dois caracteres). Ex.: O conjunto 'Payload Format Indicator' possui ID = '00',
+ * Size = 2 e Val = '01', logo seu conjunto seria 000201
  */
 class PixPayload
 {
@@ -35,8 +36,12 @@ class PixPayload
      */
     private static function buildDataset(string $id, string $val): string
     {
-        $size = str_pad(mb_strlen($val), 2, '0', STR_PAD_LEFT);
-        return $id . $size . $val;
+        # Preenche a string $val para o tamanho 2 com zero a esquerda, caso ela
+        # tenha tamanho menor que 2;
+        $val_padded = str_pad(mb_strlen($val), 2, '0', STR_PAD_LEFT);
+
+        # retorna a composição determinada pelo BC.
+        return $id . $val_padded . $val;
     }
 
     /**
@@ -137,7 +142,7 @@ class PixPayload
     {
         $payload = "";
         $payload = self::payloadFormatIndicator();
-        //$payload .= $this->getUniqPayment();
+        $payload .= $this->getUniqPayment();
         $payload .= $this->merchantAccountInformation();
         $payload .= self::buildDataset(PixCodes::MERCHANT_CATEGORY_CODE, '0000');
         $payload .= self::buildDataset(PixCodes::TRANSACTION_CURRENCY, '986');

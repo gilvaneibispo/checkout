@@ -1,7 +1,15 @@
-index:
-    path: /
-    controller: App\Controller\DefaultController::index
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
 
-static_pix:
-    path: /pix/static
-    controller: App\Controller\DefaultController::staticPix
+#static_pix:
+#    path: /pix/static
+#    controller: App\Controller\DefaultController::staticPix
+
+#dynamic_pix:
+#    path: /pix/dynamic
+#    controller: App\Controller\DefaultController::dynamicPix
+
+#shopping_cart:
+#    path: /shopping-cart
+#    controller: App\Controller\DefaultController::shoppingCart

@@ -1,12 +1,27 @@
 <?php
 
-class Card implements PaymentInterface
-{
-    private string $name;
+use App\Exceptions\MissingFieldException;
 
-    public function __construct($name)
+class Card implements PaymentWithSessionInterface
+{
+
+    private array $seller;
+    private array $charge;
+
+    public function __construct($data)
     {
-        $this->name = $name;
+        if (isset($data['seller']) && isset($data['payer'])) {
+            $this->seller = $data['seller'];
+            $this->charge = $data['payer'];
+        } else {
+            throw new MissingFieldException();
+        }
+    }
+
+    public function createSession(): array
+    {
+        // TODO: Implement createSession() method.
+        return array();
     }
 
     public function pay(): array
@@ -14,4 +29,6 @@ class Card implements PaymentInterface
         // TODO: Implement pay() method.
         return array();
     }
+
+
 }

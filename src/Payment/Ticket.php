@@ -1,13 +1,21 @@
 <?php
 
+use App\Exceptions\MissingFieldException;
+
 class Ticket implements PaymentInterface
 {
 
-    private string $name;
+    private array $seller;
+    private array $charge;
 
-    public function __construct($name)
+    public function __construct(array $data)
     {
-        $this->name = $name;
+        if (isset($data['seller']) && isset($data['payer'])) {
+            $this->seller = $data['seller'];
+            $this->charge = $data['payer'];
+        } else {
+            throw new MissingFieldException();
+        }
     }
 
     public function pay(): array
