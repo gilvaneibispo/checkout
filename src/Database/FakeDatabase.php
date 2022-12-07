@@ -5,17 +5,21 @@ class FakeDatabase
 
     public static function getDataSeller(): array
     {
+        # dados fakes...
+        # apenas para exemplo...
         return array(
-            "name" => "Gilvanei Pereira Bispo",
-            "cpf" => "03865846564",
-            "email" => "gilvanei.pereira@gmail.com",
-            "city" => "Barrocas",
-            "key_pix" => "7a5b427b-740e-47ae-adee-cdb9adfe3650"
+            "name" => "Marta Maria Maju",
+            "cpf" => "88067118060",
+            "email" => "m.maju@mail.com",
+            "city" => "Salvador",
+            "key_pix" => "c329e315-1471-0001-t56h-2k1ei8feli92"
         );
     }
 
     public static function getDataPayer(): array
     {
+        # dados fakes...
+        # apenas para exemplo...
         return array(
             "name" => "João José Maré",
             "cpf" => "69395172002",

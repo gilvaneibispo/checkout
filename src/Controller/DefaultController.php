@@ -2,15 +2,10 @@
 
 namespace App\Controller;
 
-
-use App\Util\Environment;
-use Closure;
-use EnvVarProcessor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use \LocalSession;
 use \FakeDatabase;
-use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
@@ -61,17 +56,22 @@ class DefaultController extends AbstractController
      */
     public function staticPix($order_ref): Response
     {
-        //$data = Session::getOrder("ORD0000000000000001670183504");
 
+        try {
 
-        $data = LocalSession::getOrder($order_ref);
+            $data = LocalSession::getOrder($order_ref);
 
+            # gerando o QRCode do Pix.
+            $pay = new \Payment(new \Pix($data));
+            $data = $pay->paymentHandler();
 
-        # gerando o QRCode do Pix.
-        $pay = new \Payment(new \Pix($data));
-        $data = $pay->paymentHandler();
+            return $this->json($data);
 
-        return $this->json($data);
+        } catch (\Exception $e) {
+            return $this->json(array(
+                "error" => $e->getMessage()
+            ));
+        }
     }
 
     /**
@@ -81,20 +81,21 @@ class DefaultController extends AbstractController
      */
     public function dynamicPix($order_ref): Response
     {
-        //Environment::load(realpath(dirname(__DIR__, 2)));
 
-        # recumperando os dados do DB.
-        $data = LocalSession::getOrder($order_ref);
+        try {
+            # recumperando os dados do DB.
+            $data = LocalSession::getOrder($order_ref);
 
-        $data['seller']['gn'] = array(
-            "client_id" => getenv("GN_CLIENT_ID"),
-            "secret_key" => getenv("GN_SECRET_KEY")
-        );
+            # gerando o QRCode do Pix.
+            $pay = new \Payment(new \GnPix($data));
+            $data = $pay->paymentHandler();
 
-        # gerando o QRCode do Pix.
-        $pay = new \Payment(new \GnPix($data));
-        $data = $pay->paymentHandler();
+            return $this->json($data);
 
-        return $this->json($data);
+        } catch (\Exception $e) {
+            return $this->json(array(
+                "error" => $e->getMessage()
+            ));
+        }
     }
 }
