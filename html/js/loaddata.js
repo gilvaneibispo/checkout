@@ -1,8 +1,7 @@
 let umaVar = 8;
 
 $(function () {
-    let areaOrder = $("#areaOrder");
-    let orderItemsNum = $("#orderItemsNum");
+
 
 
     general.REQUEST_API = function () {
@@ -11,25 +10,45 @@ $(function () {
 
             $.get(`${general.BASE_URL}/shopping-cart`, function (data) {
 
-                orderItemsNum.text(data.items_num)
-
-                let items = data.items;
-
-                let html = "";
-                items.forEach(function (item) {
-                    html += createItemHTML(item);
-                });
-
-                html += createSubtotalHtml(data.value.subtotal);
-                html += createOffValueHTML(data.value.off)
-                html += createTotalHtml(data.value.total);
-                areaOrder.append(html);
-
+                cartDataHandler(data);
                 resolve(data);
             }).fail(function (e) {
                 reject(e);
             });
         });
+    }
+
+    function cartDataHandler(data){
+
+        // carregando os elementos do DOM.
+        let ulOrder = $("#areaOrder");
+        let orderItemsNum = $("#orderItemsNum");
+
+        // atualiza a quantidade de itens no carrinho.
+        orderItemsNum.text(data.items_num)
+
+        let items = data.items;
+
+        let html = "";
+
+        // cria um elemento HTML 'li' para cada item do carrinho.
+        items.forEach(function (item) {
+
+            html += createItemHTML(item);
+        });
+
+        // cria um elemento HTML 'li' para o item subtotal.
+        html += createSubtotalHtml(data.value.subtotal);
+
+        // cria um elemento HTML 'li' para o desconto.
+        html += createOffValueHTML(data.value.off);
+
+        // cria um elemento HTML 'li' para o total.
+        html += createTotalHtml(data.value.total);
+
+        // adiciona o HTML criado (conjunto de li)
+        // na ul da compra.
+        ulOrder.append(html);
     }
 
     function createItemHTML(item) {
