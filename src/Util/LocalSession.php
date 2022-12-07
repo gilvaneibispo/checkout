@@ -1,15 +1,21 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Session\Session;
+use \App\Exceptions\MissingFieldException;
 
 class LocalSession
 {
 
+    /**
+     * @param array $order
+     * @return void
+     * @throws MissingFieldException
+     */
     public static function saveOrder(array $order)
     {
 
         if (!isset($order['order_ref'])) {
-            throw new \App\Exceptions\MissingFieldException();
+            throw new MissingFieldException();
         }
 
         $session = new Session();

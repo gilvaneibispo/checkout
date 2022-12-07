@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 
+use App\Util\Environment;
+use Closure;
+use EnvVarProcessor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use \LocalSession;
@@ -78,9 +81,15 @@ class DefaultController extends AbstractController
      */
     public function dynamicPix($order_ref): Response
     {
+        //Environment::load(realpath(dirname(__DIR__, 2)));
 
         # recumperando os dados do DB.
         $data = LocalSession::getOrder($order_ref);
+
+        $data['seller']['gn'] = array(
+            "client_id" => getenv("GN_CLIENT_ID"),
+            "secret_key" => getenv("GN_SECRET_KEY")
+        );
 
         # gerando o QRCode do Pix.
         $pay = new \Payment(new \GnPix($data));
