@@ -5,25 +5,19 @@ namespace App\Util;
 class Environment{
 
     /**
-     * @dir string - Diretorio absoluto do arquivo
-     * @param string $dir
-     * @return bool
+     * @param string $key
+     * @return string
+     * @throws \Exception
      */
-	public static function load(string $dir = "/"):bool
+	public static function load(string $key):string
     {
 
-		$envFile = "{$dir}/.env";
-		
-		if(!file_exists($envFile)){
-			throw new \Exception("Error: {$envFile} not found", 404);
+		$envArr = $_ENV;
+
+		if(!is_array($envArr) || !isset($envArr[$key])){
+			throw new \Exception("Error: {$key} is not defined!", 404);
 		}
 
-		$lines = file($envFile);
-
-		foreach($lines as $line){
-			putenv(trim($line));
-		}
-
-		return true;
+		return $envArr[$key];
 	}
 }

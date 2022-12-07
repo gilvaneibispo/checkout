@@ -140,7 +140,7 @@ class PixPayload
 
     public function createPayload(): string
     {
-        $payload = "";
+
         $payload = self::payloadFormatIndicator();
         $payload .= $this->getUniqPayment();
         $payload .= $this->merchantAccountInformation();

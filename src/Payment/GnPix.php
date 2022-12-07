@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\MissingFieldException;
+use App\Util\Environment;
 use Gerencianet\Exception\GerencianetException;
 use Gerencianet\Gerencianet;
 
@@ -26,8 +27,6 @@ class GnPix implements PaymentInterface
     public static function getInitialData(): array
     {
         return array(
-            "client_id" => "*******",
-            "client_secret" => "********",
             "certificate" => realpath(dirname(__DIR__, 2) . '/var/cert/exdev_pro.pem'),//realpath(__DIR__ . "/productionCertificate.p12"), // Absolute path to the certificate in .pem or .p12 format
             "sandbox" => false,
             "debug" => false,
@@ -46,7 +45,11 @@ class GnPix implements PaymentInterface
 
         try {
 
-            $api = Gerencianet::getInstance(self::getInitialData());
+            $config = self::getInitialData();
+            $config['client_id'] = Environment::load("GN_CLIENT_ID");
+            $config['client_secret'] = Environment::load("GN_SECRET_KEY");
+
+            $api = Gerencianet::getInstance($config);
 
             $pix = $api->pixCreateCharge($params, $body);
 

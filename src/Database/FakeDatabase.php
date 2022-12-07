@@ -6,11 +6,11 @@ class FakeDatabase
     public static function getDataSeller(): array
     {
         return array(
-            "name" => "********",
-            "cpf" => "********",
-            "email" => "********",
-            "city" => "********",
-            "key_pix" => "********"
+            "name" => "Gilvanei Pereira Bispo",
+            "cpf" => "03865846564",
+            "email" => "gilvanei.pereira@gmail.com",
+            "city" => "Barrocas",
+            "key_pix" => "7a5b427b-740e-47ae-adee-cdb9adfe3650"
         );
     }
 
