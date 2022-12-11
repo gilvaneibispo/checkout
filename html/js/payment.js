@@ -1,5 +1,6 @@
 $(function () {
 
+<<<<<<< HEAD
     let publicKey = null;
     let idSession = null;
     let order = null;
@@ -22,6 +23,19 @@ $(function () {
         loadDynamicPix(resp.order_ref);
         getPSPublicKey();
         keyUpInputCardHandler();
+=======
+
+    general.REQUEST_API().then((resp) => {
+        console.log("RESPOSTA: ", resp);
+        initPayment(resp);
+    });
+
+    function initPayment(resp){
+
+        bootStrapTabConfig();
+        loadStaticPix(resp.order_ref);
+        loadDynamicPix(resp.order_ref);
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
         $('.loading').css({
             display: 'none'
@@ -39,7 +53,11 @@ $(function () {
 
     function loadStaticPix(orderRef) {
 
+<<<<<<< HEAD
         $.get(`${general.BASE_URL}/pay/pix/static/${orderRef}`, function (resp) {
+=======
+        $.get(`${general.BASE_URL}/pix/static/${orderRef}`, function (resp) {
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
             $("#qrcode").attr('src', resp.location);
             $("#textCode").text(resp.payload);
@@ -48,7 +66,12 @@ $(function () {
 
     function loadDynamicPix(orderRef) {
 
+<<<<<<< HEAD
         $.get(`${general.BASE_URL}/pay/pix/dynamic/${orderRef}`, function (resp) {
+=======
+        console.log(general.ORDER_DATA);
+        $.get(`${general.BASE_URL}/pix/dynamic/${orderRef}`, function (resp) {
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
             $("#qrcodeDyn").attr('src', resp.location);
             $("#textCodeDyn").text(resp.payload);
@@ -56,6 +79,7 @@ $(function () {
     }
 
 
+<<<<<<< HEAD
     function getPSPublicKey() {
 
         //// MUDAR A ROTA NO SERVIDOR PARA /PAY/CARD/{TYPE}/START
@@ -323,6 +347,25 @@ $(function () {
 
     /*
     $.get(`${general.BASE_URL}/pay/card/true`, function (resp) {
+=======
+    /*
+    $.get("./test.php", function (resp) {
+        console.log(resp);
+        publicKey = resp.public_key;
+        console.log("publicKey: ", publicKey);
+    });
+
+
+
+    $(document).on('change', '#inputInst', function (e) {
+        e.preventDefault();
+
+        numberInst = $(this).val();
+        console.log(numberInst);
+    })
+
+    $.get('./session-create.php', function (resp) {
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
         $(".loading").css({
             display: 'none',
@@ -347,7 +390,11 @@ $(function () {
 
                 if (response.paymentMethods.BOLETO.options.BOLETO.status === "AVAILABLE") {
 
+<<<<<<< HEAD
 
+=======
+                    /*
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
                     $.get("./boleto.php", function (resp) {
 
                         console.log(resp);
@@ -356,7 +403,11 @@ $(function () {
                             $("#boletoNumber").text(resp[0].formatted_barcode)
                             console.log("Código do boleto: " + resp[0]);
                         }
+<<<<<<< HEAD
                     });
+=======
+                    });* /
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
                     let data = {
                         "data": {
@@ -408,6 +459,15 @@ $(function () {
                 }
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
                 let allOptionsCard = response.paymentMethods.CREDIT_CARD.options;
 
                 if (allOptionsCard) {
@@ -615,6 +675,11 @@ $(function () {
 
         console.log(lastChar);
     });
+<<<<<<< HEAD
 
      */
+=======
+    */
+
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 });

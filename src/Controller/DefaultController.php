@@ -38,7 +38,6 @@ class DefaultController extends AbstractController
     public function shoppingCart(): Response
     {
         try {
-
             # recupera os dados do carrinho do banco de dados.
             $data = FakeDatabase::getDataPurchase();
 
@@ -88,6 +87,7 @@ class DefaultController extends AbstractController
     {
 
         try {
+
             # recuperando os dados do DB.
             $data = LocalSession::getOrder($order_ref);
 
@@ -105,7 +105,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route ("/pay/card/{type}/start", name="app_credit_pay_start")
+     * @Route ("/pay/card/start", name="app_credit_pay_start")
      * @param $type
      * is_debit 1 ou 0 | true ou false | qualquer outro valor resulta em false.
      * @return void
@@ -133,7 +133,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route ("/pay/card/{type}/confirm", name="app_credit_pay_confirm")
+     * @Route ("/pay/card/confirm", name="app_credit_pay_confirm")
      * @param $type
      * is_debit 1 ou 0 | true ou false | qualquer outro valor resulta em false.
      * @return void
@@ -175,11 +175,6 @@ class DefaultController extends AbstractController
             } else {
                 throw new \Exception("Method not alone!");
             }
-
-
-            //$pay = new Payment();
-            // $pay->pay($data, Payment::PAY_OPTION_CREDIT_CARD, false);
-
 
         } catch (\Exception $e) {
             return $this->json(array(

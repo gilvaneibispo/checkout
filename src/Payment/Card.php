@@ -5,7 +5,6 @@ use App\Util\Environment;
 
 class Card implements PaymentWithSessionInterface
 {
-
     const CREDIT_CARD = "CREDIT_CARD";
     const DEBIT_CARD = "DEBIT_CARD";
 
@@ -47,7 +46,7 @@ class Card implements PaymentWithSessionInterface
 
         try {
 
-            return (new PagSeguro())->createSession($this->seller['email'], $this->token);
+            return PagSeguro::createSession($this->seller['email'], $this->token);
         } catch (Exception $e) {
             throw $e;
         }
@@ -97,5 +96,4 @@ class Card implements PaymentWithSessionInterface
             "notification_urls" => array()
         );
     }
-
 }

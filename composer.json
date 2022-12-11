@@ -15,10 +15,14 @@
         "symfony/flex": "^1.17|^2",
         "symfony/framework-bundle": "5.4.*",
         "symfony/runtime": "5.4.*",
+<<<<<<< HEAD
         "symfony/yaml": "5.4.*",
       "ext-curl": "*",
       "ext-json": "*",
       "ext-simplexml": "*"
+=======
+        "symfony/yaml": "5.4.*"
+>>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
     },
     "config": {
         "allow-plugins": {
