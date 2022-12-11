@@ -10,7 +10,7 @@ class FakeDatabase
         return array(
             "name" => "Marta Maria Maju",
             "cpf" => "88067118060",
-            "email" => "m.maju@mail.com",
+            "email" => "gilvanei.pereira@gmail.com",
             "city" => "Salvador",
             "key_pix" => "c329e315-1471-0001-t56h-2k1ei8feli92"
         );
@@ -29,12 +29,22 @@ class FakeDatabase
         );
     }
 
+
+    public static function cardSaved(): array
+    {
+        return array(
+            "toked" => "CHAR_C754155B-55F1-48C4-81BD-2E90A23F6CF2",
+            "final" => "1111",
+            "type" => "credit"
+        );
+    }
+
     public static function getDataProduct01(): array
     {
         return array(
             "title" => "Camisa Apoluh Azul - Tam: M",
             "desc" => "Camisa de algodão da Marcopolus na cor cinza.",
-            "price" => 0.53,
+            "price" => 150.53,
             "ref" => "PROD00001"
         );
     }
@@ -78,7 +88,8 @@ class FakeDatabase
                 "total" => $subtotal - $off,
             ),
             "seller" => self::getDataSeller(),
-            "payer" => self::getDataPayer()
+            "payer" => self::getDataPayer(),
+            "card" => self::cardSaved()
         );
     }
 

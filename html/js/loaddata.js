@@ -62,7 +62,7 @@ $(function () {
                         </em>
                     </small>
                 </div>
-            <span class="text-muted">${currencyFormat(item.price)}</span>
+            <span class="text-muted">${general.CURRENCY_FORMAT(item.price)}</span>
         </li>
         `;
     }
@@ -74,7 +74,7 @@ $(function () {
                 <h6 class="my-0">Código de promoção</h6>
                 <small>${off.code}</small>
             </div>
-            <span class="text-success">-${currencyFormat(off.value)}</span>
+            <span class="text-success">-${general.CURRENCY_FORMAT(off.value)}</span>
         </li>
       `;
     }
@@ -83,7 +83,7 @@ $(function () {
         return `
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <span class="my-0">Subotal (BRL)</span>
-            <strong>${currencyFormat(subtotal)}</strong>
+            <strong>${general.CURRENCY_FORMAT(subtotal)}</strong>
         </li>
         `;
     }
@@ -92,17 +92,8 @@ $(function () {
         return `
         <li class="list-group-item d-flex justify-content-between">
             <span>Total (BRL)</span>
-            <strong>${currencyFormat(total)}</strong>
+            <strong>${general.CURRENCY_FORMAT(total)}</strong>
         </li>
         `;
-    }
-
-    function currencyFormat(price) {
-
-        let op = {
-            style: 'currency',
-            currency: 'BRL'
-        };
-        return price.toLocaleString('pt-br', op);
     }
 });

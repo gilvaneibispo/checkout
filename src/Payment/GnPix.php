@@ -5,6 +5,10 @@ use App\Util\Environment;
 use Gerencianet\Exception\GerencianetException;
 use Gerencianet\Gerencianet;
 
+/**
+ * Essa classe implementa a interface PaymentInterface para pagamento com
+ * Pix usando a API da Gerencianet.
+ */
 class GnPix implements PaymentInterface
 {
     private array $seller;
@@ -26,7 +30,7 @@ class GnPix implements PaymentInterface
     }
 
     /**
-     * Recumpera o caminho completo do certificado da Gerencianet informado
+     * Recupera o caminho completo do certificado da Gerencianet informado
      * no .env!
      * @return string
      * @throws Exception
@@ -36,7 +40,7 @@ class GnPix implements PaymentInterface
 
         try {
 
-            # recumpera o caminho do certificado nas variáveis de ambiente.
+            # recupera o caminho do certificado nas variáveis de ambiente.
             $path = Environment::load("GN_CERT_PATH");
             return realpath(dirname(__DIR__, 2) . $path);
         } catch (Exception $e) {
@@ -84,7 +88,7 @@ class GnPix implements PaymentInterface
             # constroi o array de dados solicitado pela Gerencianet.
             $body = $this->arrDataBuild();
 
-            # recumpera os dados de configuração da conexão com o Gerencianet.
+            # recupera os dados de configuração da conexão com o Gerencianet.
             $config = self::getInitialData();
 
             # cria uma instância da API da Gerencianet

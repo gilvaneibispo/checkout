@@ -1,16 +1,27 @@
 $(function () {
 
+    let publicKey = null;
+    let idSession = null;
+    let order = null;
+    let numberInst = 1;
+    let requestingBrand = false;
+    let lockAction = false;
+    let maxInst = 12;
+    let brandCard = null;
 
     general.REQUEST_API().then((resp) => {
-        console.log("RESPOSTA: ", resp);
+        selectInstallmentsNumber();
         initPayment(resp);
     });
 
-    function initPayment(resp){
+    function initPayment(resp) {
 
+        order = resp;
         bootStrapTabConfig();
         loadStaticPix(resp.order_ref);
         loadDynamicPix(resp.order_ref);
+        getPSPublicKey();
+        keyUpInputCardHandler();
 
         $('.loading').css({
             display: 'none'
@@ -28,7 +39,7 @@ $(function () {
 
     function loadStaticPix(orderRef) {
 
-        $.get(`${general.BASE_URL}/pix/static/${orderRef}`, function (resp) {
+        $.get(`${general.BASE_URL}/pay/pix/static/${orderRef}`, function (resp) {
 
             $("#qrcode").attr('src', resp.location);
             $("#textCode").text(resp.payload);
@@ -37,8 +48,7 @@ $(function () {
 
     function loadDynamicPix(orderRef) {
 
-        console.log(general.ORDER_DATA);
-        $.get(`${general.BASE_URL}/pix/dynamic/${orderRef}`, function (resp) {
+        $.get(`${general.BASE_URL}/pay/pix/dynamic/${orderRef}`, function (resp) {
 
             $("#qrcodeDyn").attr('src', resp.location);
             $("#textCodeDyn").text(resp.payload);
@@ -46,23 +56,273 @@ $(function () {
     }
 
 
-    /*
-    $.get("./test.php", function (resp) {
-        console.log(resp);
-        publicKey = resp.public_key;
-        console.log("publicKey: ", publicKey);
-    });
+    function getPSPublicKey() {
+
+        //// MUDAR A ROTA NO SERVIDOR PARA /PAY/CARD/{TYPE}/START
+        //// E A CONFIRMAÇÃO COMO /PAY/CARD/{TYPE}/CONFIRM
+        $.get(`${general.BASE_URL}/pay/card/credit/start`, function (resp) {
+
+            console.log(resp);
+            publicKey = resp.public_key;
+            getBan(resp.session_id);
+        });
+    }
+
+    function getBan(sessionId) {
+        PagSeguroDirectPayment.setSessionId(sessionId);
+
+        console.log(order);
+        PagSeguroDirectPayment.getPaymentMethods({
+            amount: order.value.total,
+            success: function (response) {
+
+                // se o pagamento por cartão estiver disponível
+                // carrega as bandeirinhas dos cartões disponíveis.
+                flagHandler(response.paymentMethods.CREDIT_CARD.options);
+                console.log(response);
+            },
+            error: function (e) {
+                console.log(e.responseText);
+            }
+        });
+    }
+
+    function flagHandler(optionsCard) {
 
 
+        if (optionsCard) {
 
-    $(document).on('change', '#inputInst', function (e) {
+            let theHtml = "";
+
+            Object.keys(optionsCard).map(function (key) {
+
+                theHtml += imgFlagHTMLCreate(optionsCard[key])
+
+            });
+
+            console.log(theHtml)
+
+            $(".bandeira-box").html(theHtml);
+        }
+    }
+
+    function imgFlagHTMLCreate(item) {
+
+        let theHtml = "";
+
+        if (item.status === "AVAILABLE") {
+
+            theHtml += `<img src="${general.PS_FLAG_URL + item.images.MEDIUM.path}"`;
+            theHtml += `title="Cartão ${item.name} está disponível!"`;
+            theHtml += `alt="CARTÃO ${item.name}"/>`
+        }
+
+        return theHtml;
+    }
+
+
+    function selectInstallmentsNumber() {
+        $(document).on('change', '#inputInst', function (e) {
+            e.preventDefault();
+
+            numberInst = $(this).val();
+        })
+    }
+
+    function keyUpInputCardHandler() {
+
+        $("#inputNumberCard").on('keyup', function () {
+
+            let val = $(this).val();
+
+            let lastChar = val.substring(val.length - 1, val.length);
+
+            if (isNaN(lastChar)) {
+
+                $(this).val(val.substring(0, val.length - 1))
+            }
+
+            if (val.length >= 6 && val.length <= 8) {
+
+                if (!requestingBrand) {
+                    requestingBrand = true;
+
+                    requestBrandCard(val);
+                }
+            }
+
+            if (val.length < 16 && lockAction === true) {
+                lockAction = false;
+            }
+
+            if (val.length === 16 && lockAction === false) {
+
+                lockAction = true;
+
+                console.log("Chamando installment");
+                installmentCheck();
+            }
+
+        });
+    }
+
+    function requestBrandCard(val) {
+
+        PagSeguroDirectPayment.getBrand({
+            cardBin: val,
+            success: function (response) {
+                //bandeira encontrada
+                console.log(response);
+
+                requestingBrand = false;
+                brandCard = response.brand.name;
+                $("#textBrand").text("Cartão " + response.brand.name);
+                $("#inputCvv").attr('maxlength', response.brand.cvvSize).attr('minlength', response.brand.cvvSize);
+            },
+            error: function (response) {
+                //tratamento do erro
+                console.log(response);
+            }
+        });
+    }
+
+    function installmentCheck() {
+        PagSeguroDirectPayment.getInstallments({
+            amount: order.value.total,
+            maxInstallmentNoInterest: maxInst,
+            brand: brandCard,
+            success: function (response) {
+                // Retorna as opções de parcelamento disponíveis
+
+                let inst = response.installments[brandCard];
+
+                let theOptions = "";
+
+                console.log(inst);
+                $.each(inst, function (index, item) {
+
+
+                    theOptions += createInstallmentOptionHTML(item);
+                });
+
+                $("#inputInst").html(theOptions);
+
+                console.log(inst);
+            },
+            error: function (response) {
+                // callback para chamadas que falharam.
+            },
+            complete: function (response) {
+                // Callback para todas chamadas.
+            }
+        });
+    }
+
+    function createInstallmentOptionHTML(item) {
+
+        let instInBRL = general.CURRENCY_FORMAT(item.installmentAmount);
+        let instSum = general.CURRENCY_FORMAT(item.totalAmount);
+
+        console.log(instInBRL + " - " + instSum);
+
+        let textOption = `${item.quantity}x  de ${instInBRL} - `;
+        textOption += (item.interestFree ? "Sem juros" : `Total ${instSum}`);
+
+        return `<option value="${item.quantity}">${textOption}</option>`;
+    }
+
+    $("#payAction").on('click', function (e) {
+
         e.preventDefault();
 
-        numberInst = $(this).val();
-        console.log(numberInst);
-    })
+        let nameCard = $("#inputNameCard").val();
+        let numberCard = $("#inputNumberCard").val();
+        let inputCardCvv = $("#inputCvv");
+        let cardCvv = inputCardCvv.val();
+        let expMonthCard = $("#inputExpMonth").val();
+        let expYearCard = $("#inputExpYear").val();
 
-    $.get('./session-create.php', function (resp) {
+        let encryptedCard = null;
+
+        console.log({
+            publicKey: publicKey,
+            holder: nameCard,
+            number: numberCard,
+            expMonth: expMonthCard,
+            expYear: expYearCard,
+            securityCode: cardCvv,
+            installment: numberInst
+        })
+
+        let card = PagSeguro.encryptCard({
+            publicKey: publicKey,
+            holder: nameCard,
+            number: numberCard,
+            expMonth: expMonthCard,
+            expYear: expYearCard,
+            securityCode: cardCvv
+        });
+
+        if (card.hasErrors) {
+
+            showCardError(card.errors[0].code);
+            console.log(card.errors)
+        } else {
+            encryptedCard = card.encryptedCard;
+            //console.log(encryptedKey);
+            //btnPay.removeAttr('disabled')
+
+            $.ajax({
+                url: `${general.BASE_URL}/pay/card/credit/confirm`,
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    //'total_price': order.value.total * 100,
+                    'order_ref': order.order_ref,
+                    'installment': numberInst,
+                    'encrypted_card': encryptedCard,
+                }),
+                success: function (data) {
+                    console.log(data);
+
+                    let buyStatus = data.success.payment_response;
+
+                    if (buyStatus.message === "SUCESSO") {
+                        alert('Pagamento aprovado - Referência: ' + buyStatus.reference);
+                    } else {
+                        alert('Houve um erro na tentativa de realizar o pagamento!');
+                    }
+                },
+            }).fail(function (e) {
+                console.log(e.responseText);
+            });
+        }
+
+
+    });
+
+    function showCardError(theError) {
+
+        let errorMsg = "Erro no reconhecimento do cartão";
+
+        switch (theError) {
+            case "INVALID_EXPIRATION_YEAR":
+            case "INVALID_EXPIRATION_MONTH":
+                errorMsg = "Erro: Verifique a data de expiração do cartão!";
+                break;
+            case "INVALID_NUMBER":
+                errorMsg = "O número do cartão não é válido!";
+                break;
+            case "INVALID_SECURITY_CODE":
+                errorMsg = "Erro: Verifique o código de segurança do cartão!"
+        }
+
+        alert(errorMsg);
+    }
+
+    /*
+    $.get(`${general.BASE_URL}/pay/card/true`, function (resp) {
 
         $(".loading").css({
             display: 'none',
@@ -87,7 +347,7 @@ $(function () {
 
                 if (response.paymentMethods.BOLETO.options.BOLETO.status === "AVAILABLE") {
 
-                    /*
+
                     $.get("./boleto.php", function (resp) {
 
                         console.log(resp);
@@ -96,7 +356,7 @@ $(function () {
                             $("#boletoNumber").text(resp[0].formatted_barcode)
                             console.log("Código do boleto: " + resp[0]);
                         }
-                    });* /
+                    });
 
                     let data = {
                         "data": {
@@ -146,12 +406,6 @@ $(function () {
                         console.log(e.responseText);
                     });
                 }
-
-
-
-
-
-
 
 
                 let allOptionsCard = response.paymentMethods.CREDIT_CARD.options;
@@ -361,6 +615,6 @@ $(function () {
 
         console.log(lastChar);
     });
-    */
 
+     */
 });
