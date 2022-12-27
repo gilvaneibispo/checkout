@@ -1,7 +1,10 @@
 <?php
 
-use \App\Util\QRCodeGeneration;
-use \App\Exceptions\MissingFieldException;
+namespace App\Model\Payment;
+
+use App\Exceptions\MissingFieldException;
+use App\Util\QRCodeGeneration;
+use App\Interfaces\PaymentInterface;
 
 /*
  * https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf

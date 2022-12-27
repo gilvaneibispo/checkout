@@ -1,7 +1,15 @@
 <?php
 
+namespace App\Database;
+
 class FakeDatabase
 {
+
+    public static function saveCard(array $data): bool
+    {
+        # fake mathod...
+        return true;
+    }
 
     public static function getDataSeller(): array
     {
@@ -33,9 +41,14 @@ class FakeDatabase
     public static function cardSaved(): array
     {
         return array(
-            "toked" => "CHAR_C754155B-55F1-48C4-81BD-2E90A23F6CF2",
-            "final" => "1111",
-            "type" => "credit"
+            "toked" => "CARD_772A1082-AAA2-446B-9BC5-9E9D4C04070F",
+            "brand" => "visa",
+            "last_digits" => "1111",
+            "type" => "credit",
+            "exp_month" => 12,
+            "exp_year" => 2030,
+            "alias" => "Cartão Visa de Teste",
+            "holder_name" => "José da Silva"
         );
     }
 

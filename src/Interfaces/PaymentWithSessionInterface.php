@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Interfaces;
+
 interface PaymentWithSessionInterface extends PaymentInterface
 {
 

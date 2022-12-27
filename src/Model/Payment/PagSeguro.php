@@ -1,8 +1,9 @@
 <?php
 
-use \App\Util\Environment;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
+namespace App\Model\Payment;
+
+use App\Util\CURLRequest;
+use \Exception;
 
 class PagSeguro
 {

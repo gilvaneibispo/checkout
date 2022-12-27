@@ -1,6 +1,5 @@
 $(function () {
 
-<<<<<<< HEAD
     let publicKey = null;
     let idSession = null;
     let order = null;
@@ -23,19 +22,6 @@ $(function () {
         loadDynamicPix(resp.order_ref);
         getPSPublicKey();
         keyUpInputCardHandler();
-=======
-
-    general.REQUEST_API().then((resp) => {
-        console.log("RESPOSTA: ", resp);
-        initPayment(resp);
-    });
-
-    function initPayment(resp){
-
-        bootStrapTabConfig();
-        loadStaticPix(resp.order_ref);
-        loadDynamicPix(resp.order_ref);
->>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
         $('.loading').css({
             display: 'none'
@@ -53,11 +39,7 @@ $(function () {
 
     function loadStaticPix(orderRef) {
 
-<<<<<<< HEAD
         $.get(`${general.BASE_URL}/pay/pix/static/${orderRef}`, function (resp) {
-=======
-        $.get(`${general.BASE_URL}/pix/static/${orderRef}`, function (resp) {
->>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
             $("#qrcode").attr('src', resp.location);
             $("#textCode").text(resp.payload);
@@ -66,25 +48,18 @@ $(function () {
 
     function loadDynamicPix(orderRef) {
 
-<<<<<<< HEAD
         $.get(`${general.BASE_URL}/pay/pix/dynamic/${orderRef}`, function (resp) {
-=======
-        console.log(general.ORDER_DATA);
-        $.get(`${general.BASE_URL}/pix/dynamic/${orderRef}`, function (resp) {
->>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 
             $("#qrcodeDyn").attr('src', resp.location);
             $("#textCodeDyn").text(resp.payload);
         });
     }
 
-
-<<<<<<< HEAD
     function getPSPublicKey() {
 
         //// MUDAR A ROTA NO SERVIDOR PARA /PAY/CARD/{TYPE}/START
         //// E A CONFIRMAÇÃO COMO /PAY/CARD/{TYPE}/CONFIRM
-        $.get(`${general.BASE_URL}/pay/card/credit/start`, function (resp) {
+        $.get(`${general.BASE_URL}/pay/card/start`, function (resp) {
 
             console.log(resp);
             publicKey = resp.public_key;
@@ -112,7 +87,6 @@ $(function () {
     }
 
     function flagHandler(optionsCard) {
-
 
         if (optionsCard) {
 
@@ -143,7 +117,6 @@ $(function () {
 
         return theHtml;
     }
-
 
     function selectInstallmentsNumber() {
         $(document).on('change', '#inputInst', function (e) {
@@ -265,6 +238,7 @@ $(function () {
         let cardCvv = inputCardCvv.val();
         let expMonthCard = $("#inputExpMonth").val();
         let expYearCard = $("#inputExpYear").val();
+        let isCheckedSaveCard = $("#cardSave").is(":checked");
 
         let encryptedCard = null;
 
@@ -297,33 +271,31 @@ $(function () {
             //btnPay.removeAttr('disabled')
 
             $.ajax({
-                url: `${general.BASE_URL}/pay/card/credit/confirm`,
+                url: `${general.BASE_URL}/pay/card/confirm`,
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     //'total_price': order.value.total * 100,
+                    'type': "CREDIT",
                     'order_ref': order.order_ref,
                     'installment': numberInst,
                     'encrypted_card': encryptedCard,
+                    'save_card': isCheckedSaveCard
                 }),
                 success: function (data) {
                     console.log(data);
 
-                    let buyStatus = data.success.payment_response;
-
-                    if (buyStatus.message === "SUCESSO") {
-                        alert('Pagamento aprovado - Referência: ' + buyStatus.reference);
-                    } else {
+                    if (data.error.has_error) {
                         alert('Houve um erro na tentativa de realizar o pagamento!');
+                    } else {
+                        alert(`Pagamento da compra ${order.order_ref} realizado com sucesso!`);
                     }
                 },
             }).fail(function (e) {
                 console.log(e.responseText);
             });
         }
-
-
     });
 
     function showCardError(theError) {
@@ -678,8 +650,5 @@ $(function () {
 <<<<<<< HEAD
 
      */
-=======
-    */
 
->>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
 });

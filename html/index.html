@@ -1,5 +1,9 @@
+<!--
+EXEMPLOS PARA FAZER NO VUEJS:
+ - https://codepen.io/cusx/pen/aNqQdQ
+-->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Pagbank :: Checkout</title>
@@ -67,9 +71,9 @@
 
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12">
+                            <h3 class="col-12">
                                 Pagamento com cartão de crédito
-                            </div>
+                            </h3>
                             <div class="col-12">
 
                                 <a class="btn btn-sm clear-btn text-success mt-4 mb-2" data-bs-toggle="collapse"
@@ -91,9 +95,41 @@
                                 <form id="formPay">
 
                                     <div class="row">
+                                        <div class="col-12">
+                                            <hr class="mt-3 mb-3" style="opacity: 0.15"/>
+                                        </div>
+
+                                        <div class="col-12 mb-4">
+                                            <h5>Cartões salvos</h5>
+                                        </div>
+
+                                        <div class="col-12 mb-4">
+                                            <div class="card">
+                                                <h6 class="card-header">Apelido do cartão</h6>
+                                                <div class="card-body">
+                                                    <p class="card-text text-muted text-light">
+                                                        <em style="font-size: 10pt">
+                                                            José da Silva | **** 1111 | Visa | Crédito
+                                                        </em>
+                                                    </p>
+                                                    <label for="saveCardCvv">CVV:</label>
+                                                    <input class="form-control mb-2" style="display: inline-block; width: 30%"
+                                                           id="saveCardCvv" type="text" placeholder="Atrás do cartão..."/>
+
+                                                    <a href="#" class="btn btn-primary" style="float: right;">Pagar com este cartão</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
 
                                         <div class="col-12">
                                             <hr class="mt-3 mb-3" style="opacity: 0.15"/>
+                                        </div>
+
+                                        <div class="col-12 mb-4">
+                                            <h5>Adicionar novo cartão</h5>
                                         </div>
 
                                         <div class="col-12 col-md-6 mb-3">
@@ -148,7 +184,6 @@
                                             </select>
                                         </div>
                                     </div>
-<<<<<<< HEAD
 
                                     <div class="row">
                                         <div class="col">
@@ -156,8 +191,6 @@
                                             <label for="cardSave">Salvar cartão para compras futuras.</label>
                                         </div>
                                     </div>
-=======
->>>>>>> 61c0e60a9004e4e6599e3ea715bb03ceb69396b7
                                 </form>
 
                                 <a href="#" class="mb-4 mt-4 btn btn-success" id="payAction">Confirmar compra</a>

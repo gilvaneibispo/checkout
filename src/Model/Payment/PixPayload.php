@@ -8,6 +8,11 @@
  * dois caracteres). Ex.: O conjunto 'Payload Format Indicator' possui ID = '00',
  * Size = 2 e Val = '01', logo seu conjunto seria 000201
  */
+
+namespace App\Model\Payment;
+
+use App\Util\PixCodes;
+
 class PixPayload
 {
 
@@ -87,8 +92,8 @@ class PixPayload
         $addMaxSize = 99 - (strlen($key) + strlen($gui) + 4);
 
         # Trunca a informação adicional se ela for mais que os suportado.
-        if(strlen($this->description) > $addMaxSize){
-            $this->description = substr($this->description, 0, $addMaxSize-1);
+        if (strlen($this->description) > $addMaxSize) {
+            $this->description = substr($this->description, 0, $addMaxSize - 1);
         }
 
         $infoAdditional = self::buildDataset(PixCodes::MERCHANT_ACCOUNT_INFORMATION_ADDITIONAL, $this->description);
@@ -105,7 +110,7 @@ class PixPayload
     {
 
         $id = self::buildDataset(PixCodes::ADDITIONAL_DATA_FIELD_TEMPLATE_TXID, $this->txId);
-        return  self::buildDataset(PixCodes::ADDITIONAL_DATA_FIELD_TEMPLATE, $id);
+        return self::buildDataset(PixCodes::ADDITIONAL_DATA_FIELD_TEMPLATE, $id);
     }
 
     # pode ir para outra classe específica...

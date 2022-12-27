@@ -1,7 +1,9 @@
 <?php
 
+namespace App\Util;
+
 use Symfony\Component\HttpFoundation\Session\Session;
-use \App\Exceptions\MissingFieldException;
+use App\Exceptions\MissingFieldException;
 
 class LocalSession
 {

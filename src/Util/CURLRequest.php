@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Util;
+
+use \Exception;
+
 class CURLRequest
 {
 
@@ -30,7 +34,7 @@ class CURLRequest
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_POSTFIELDS => json_encode($data),
-            CURLOPT_PROXY => 'proxy.uefs.br:3128',
+            //CURLOPT_PROXY => 'proxy.uefs.br:3128',
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_SSL_VERIFYPEER => false
         ));

@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Model\Payment;
+use App\Interfaces\PaymentInterface;
+
 class Payment
 {
 
@@ -10,7 +13,7 @@ class Payment
         $this->payment = $payment;
     }
 
-    public function paymentHandler():array
+    public function paymentHandler(): array
     {
 
         return $this->payment->pay();

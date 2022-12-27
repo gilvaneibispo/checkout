@@ -1,6 +1,9 @@
 <?php
 
+namespace App\Model\Payment;
+
 use App\Exceptions\MissingFieldException;
+use App\Interfaces\PaymentInterface;
 
 class Ticket implements PaymentInterface
 {

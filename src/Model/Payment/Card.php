@@ -1,7 +1,11 @@
 <?php
 
+namespace App\Model\Payment;
+
 use App\Exceptions\MissingFieldException;
 use App\Util\Environment;
+use App\Interfaces\PaymentWithSessionInterface;
+use \Exception;
 
 class Card implements PaymentWithSessionInterface
 {
@@ -21,6 +25,7 @@ class Card implements PaymentWithSessionInterface
      */
     public function __construct($data)
     {
+
         try {
             if (isset($data['seller']) && isset($data['payer'])) {
                 $this->seller = $data['seller'];
@@ -68,7 +73,7 @@ class Card implements PaymentWithSessionInterface
     private function buildArrayPSCharge(): array
     {
 
-        if ($this->isCardToked) {
+        if (!$this->isCardToked) {
             $card = array(
                 "store" => true,
                 "encrypted" => $this->charge['encrypted_card']

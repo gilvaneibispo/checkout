@@ -1,7 +1,11 @@
 <?php
 
+namespace App\Model\Payment;
+
 use App\Exceptions\MissingFieldException;
 use App\Util\Environment;
+use App\Interfaces\PaymentInterface;
+
 use Gerencianet\Exception\GerencianetException;
 use Gerencianet\Gerencianet;
 
